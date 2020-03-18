@@ -22,12 +22,24 @@ export default function Index() {
       const response = await axios.get(
         "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST"
       )
+      const brazilConfirmedCases = await axios.get(
+        "https://corona.lmao.ninja/countries/Brazil"
+      )
+      const brazilConfirmedCasesResponse = brazilConfirmedCases.data
       const allCases = response.data
       setCoronavirusCases(allCases)
       setSuspiciousCases(allCases.suspiciousCases)
       setTestedNotInfectedCases(allCases.testedNotInfected)
-      setInfectedCases(allCases.infected)
-      setDeceasedCases(allCases.deceased)
+      setInfectedCases(
+        brazilConfirmedCasesResponse.cases > allCases.infected
+          ? brazilConfirmedCasesResponse.cases
+          : allCases.infected
+      )
+      setDeceasedCases(
+        brazilConfirmedCasesResponse.deaths > allCases.deceased
+          ? brazilConfirmedCasesResponse.deaths
+          : allCases.deceased
+      )
       setLoadingCoronaVirusCases(false)
     } catch (error) {
       alert(
