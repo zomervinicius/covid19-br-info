@@ -30,7 +30,7 @@ function Layout({ children }) {
           <p>
             <a
               className="font-bold no-underline text-white"
-              href="https://github.com/taylorbryant/gatsby-starter-tailwind"
+              href="mailto:infocoronavirusbr@gmail.com"
             >
               infocoronavirusbr@gmail.com
             </a>
