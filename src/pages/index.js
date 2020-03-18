@@ -123,7 +123,7 @@ export default function Index() {
           textColor="gray"
         ></Card>
         <span className="text-gray-400 text-center">
-          Fonte: Ministério da saúde
+          Fonte: Ministério da saúde e Wordometer
         </span>
       </div>
     </Layout>
