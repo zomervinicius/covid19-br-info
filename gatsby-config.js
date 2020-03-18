@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Coronavírus Brasil`,
-    description: `Gatsby starter styled with Tailwind`,
+    description: `Demonstrar dados do coronavírus no Brasil`,
     author: `@taylorbryant`
   },
   plugins: [
@@ -16,7 +16,7 @@ module.exports = {
         background_color: `#ffffff`,
         theme_color: `#4dc0b5`,
         display: `minimal-ui`,
-        icon: `src/images/tailwind-icon.png`
+        icon: `src/images/coronavirusImg.png`
       }
     },
     {
@@ -41,6 +41,13 @@ module.exports = {
       resolve: "gatsby-plugin-react-leaflet",
       options: {
         linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
+      }
+    },
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        // The property ID; the tracking code won't be generated without it
+        trackingId: "UA-161038624-1"
       }
     }
   ]

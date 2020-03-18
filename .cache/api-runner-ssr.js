@@ -3,13 +3,16 @@ var plugins = [{
       options: {"plugins":[]},
     },{
       plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-manifest/gatsby-ssr'),
-      options: {"plugins":[],"name":"gatsby-starter-tailwind","short_name":"starter","start_url":"/","background_color":"#ffffff","theme_color":"#4dc0b5","display":"minimal-ui","icon":"src/images/tailwind-icon.png"},
+      options: {"plugins":[],"name":"gatsby-starter-tailwind","short_name":"starter","start_url":"/","background_color":"#ffffff","theme_color":"#4dc0b5","display":"minimal-ui","icon":"src/images/coronavirusImg.png"},
     },{
       plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-offline/gatsby-ssr'),
       options: {"plugins":[]},
     },{
       plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-react-leaflet/gatsby-ssr'),
       options: {"plugins":[],"linkStyles":true},
+    },{
+      plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-google-analytics/gatsby-ssr'),
+      options: {"plugins":[],"trackingId":"UA-161038624-1"},
     }]
 // During bootstrap, we write requires at top of this file which looks like:
 // var plugins = [
