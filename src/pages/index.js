@@ -1,41 +1,55 @@
-import React from "react";
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import Card from "../components/card"
+import Layout from "../components/layout"
 
-import Layout from "../components/layout";
-import SEO from "../components/seo";
-import catAndHumanIllustration from "../images/cat-and-human-illustration.svg";
-
-function IndexPage() {
+export default function Index() {
+  const [coronavirusCases, setCoronavirusCases] = useState([])
+  const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
+  const getCoronavirusCases = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST"
+      )
+      setCoronavirusCases(response.data)
+      setLoadingCoronaVirusCases(false)
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getCoronavirusCases()
+  }, [])
   return (
     <Layout>
-      <SEO
-        keywords={[`gatsby`, `tailwind`, `react`, `tailwindcss`]}
-        title="Home"
-      />
-
-      <section className="text-center">
-        <img
-          alt="Cat and human sitting on a couch"
-          className="block mx-auto w-1/2"
-          src={catAndHumanIllustration}
-        />
-
-        <h2 className="bg-yellow-400 text-2xl font-bold inline-block my-8 p-3">
-          Hey there! Welcome to your first Gatsby site.
-        </h2>
-
-        <p className="leading-loose">
-          This is a barebones starter for Gatsby styled using{` `}
-          <a
-            className="font-bold no-underline text-gray-900"
-            href="https://tailwindcss.com/"
-          >
-            Tailwind
-          </a>
-          , a utility-first CSS framework.
-        </p>
-      </section>
+      <Card
+        title="Casos suspeitos"
+        description={coronavirusCases.suspiciousCases}
+        loadingCoronaVirusCases={loadingCoronaVirusCases}
+        full
+        textColor="blue"
+      ></Card>
+      <div className="flex flex-wrap">
+        <Card
+          title="Casos confirmados"
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          textColor="red"
+          description={coronavirusCases.infected}
+        ></Card>
+        <Card
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          title="Casos descartados"
+          description={coronavirusCases.testedNotInfected}
+          textColor="green"
+        ></Card>
+        <Card
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          title="Mortes"
+          description={coronavirusCases.deceased}
+          textColor="gray"
+        ></Card>
+      </div>
     </Layout>
-  );
+  )
 }
-
-export default IndexPage;

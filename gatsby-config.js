@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Gatsby Starter Tailwind`,
+    title: `Coronavírus Brasil`,
     description: `Gatsby starter styled with Tailwind`,
     author: `@taylorbryant`
   },
@@ -36,6 +36,12 @@ module.exports = {
         purgeOnly: [`src/css/style.css`]
       }
     },
-    `gatsby-plugin-offline`
+    `gatsby-plugin-offline`,
+    {
+      resolve: "gatsby-plugin-react-leaflet",
+      options: {
+        linkStyles: true // (default: true) Enable/disable loading stylesheets via CDN
+      }
+    }
   ]
-};
+}

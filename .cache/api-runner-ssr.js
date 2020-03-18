@@ -7,6 +7,9 @@ var plugins = [{
     },{
       plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-offline/gatsby-ssr'),
       options: {"plugins":[]},
+    },{
+      plugin: require('/home/zomervinicius/projects/college/7_semestre/coronavirusbr/node_modules/gatsby-plugin-react-leaflet/gatsby-ssr'),
+      options: {"plugins":[],"linkStyles":true},
     }]
 // During bootstrap, we write requires at top of this file which looks like:
 // var plugins = [
