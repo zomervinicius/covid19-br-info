@@ -20,7 +20,7 @@ export default function Index() {
     setSelectedState("")
     try {
       const response = await axios.get(
-        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST"
+        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
       )
       const brazilConfirmedCases = await axios.get(
         "https://corona.lmao.ninja/countries/Brazil"
