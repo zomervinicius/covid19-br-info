@@ -81,6 +81,7 @@ export default function Index() {
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
       <Select
         isLoading={loadingCoronaVirusCases}
+        isDisabled={loadingCoronaVirusCases}
         options={options}
         placeholder="Selecione um estado..."
         onChange={value => setSelectedState(value.value)}
