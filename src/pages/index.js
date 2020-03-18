@@ -1,81 +1,84 @@
-import axios from "axios"
-import React, { useEffect, useState } from "react"
-import Select from "react-select"
-import Card from "../components/card"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
-import states from "../data/states.json"
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Select from "react-select";
+import Card from "../components/card";
+import Layout from "../components/layout";
+import SEO from "../components/seo";
+import states from "../data/states.json";
 
 export default function Index() {
-  const [coronavirusCases, setCoronavirusCases] = useState([])
-  const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
+  const [coronavirusCases, setCoronavirusCases] = useState([]);
+  const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true);
   // eslint-disable-next-line no-unused-vars
-  const [selectedState, setSelectedState] = useState("")
-  const [suspiciousCases, setSuspiciousCases] = useState(0)
-  const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
-  const [infectedCases, setInfectedCases] = useState(0)
-  const [deceasedCases, setDeceasedCases] = useState(0)
+  const [selectedState, setSelectedState] = useState("");
+  const [suspiciousCases, setSuspiciousCases] = useState(0);
+  const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0);
+  const [infectedCases, setInfectedCases] = useState(0);
+  const [deceasedCases, setDeceasedCases] = useState(0);
   const getCoronavirusCases = async () => {
-    setLoadingCoronaVirusCases(true)
-    setSelectedState("")
+    setLoadingCoronaVirusCases(true);
+    setSelectedState("");
     try {
       const response = await axios.get(
         "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST"
-      )
+      );
       const brazilConfirmedCases = await axios.get(
-        "https://corona.lmao.ninja/countries/Brazil"
-      )
-      const brazilConfirmedCasesResponse = brazilConfirmedCases.data
-      const allCases = response.data
-      setCoronavirusCases(allCases)
-      setSuspiciousCases(allCases.suspiciousCases)
-      setTestedNotInfectedCases(allCases.testedNotInfected)
+        "https://covid19.mathdro.id/api/countries/BR"
+      );
+      const brazilConfirmedCasesResponse = brazilConfirmedCases.data;
+      const allCases = response.data;
+      const confirmedCasesInBrazil =
+        brazilConfirmedCasesResponse.confirmed.value;
+      const deathCasesinBrazil = brazilConfirmedCasesResponse.deaths.value;
+      setCoronavirusCases(allCases);
+      setSuspiciousCases(allCases.suspiciousCases);
+      setTestedNotInfectedCases(allCases.testedNotInfected);
       setInfectedCases(
-        brazilConfirmedCasesResponse.cases > allCases.infected
-          ? brazilConfirmedCasesResponse.cases
+        confirmedCasesInBrazil > allCases.infected
+          ? confirmedCasesInBrazil
           : allCases.infected
-      )
+      );
       setDeceasedCases(
-        brazilConfirmedCasesResponse.deaths > allCases.deceased
-          ? brazilConfirmedCasesResponse.deaths
+        deathCasesinBrazil > allCases.deceased
+          ? deathCasesinBrazil
           : allCases.deceased
-      )
-      setLoadingCoronaVirusCases(false)
+      );
+      setLoadingCoronaVirusCases(false);
     } catch (error) {
       alert(
         "Não foi possível obter os dados, avise nesse e-mail infocoronavirusbr@gmail.com"
-      )
+      );
     }
-  }
+  };
   useEffect(() => {
-    getCoronavirusCases()
-  }, [])
+    getCoronavirusCases();
+  }, []);
 
   const options = states
     .sort((a, b) => a.name.localeCompare(b.name))
-    .map(state => ({ value: state.abbr, label: state.name }))
+    .map(state => ({ value: state.abbr, label: state.name }));
 
   useEffect(() => {
     if (selectedState) {
-      console.log(selectedState)
+      console.log(selectedState);
       const suspiciousCasesByRegion = coronavirusCases.suspiciousCasesByRegion.find(
         item => item.state === selectedState
-      )
+      );
       const testedNotInfectedByRegion = coronavirusCases.testedNotInfectedByRegion.find(
         item => item.state === selectedState
-      )
+      );
       const infectedByRegion = coronavirusCases.infectedByRegion.find(
         item => item.state === selectedState
-      )
+      );
       const deceasedByRegion = coronavirusCases.deceasedByRegion.find(
         item => item.state === selectedState
-      )
-      setSuspiciousCases(suspiciousCasesByRegion.count || 0)
-      setTestedNotInfectedCases(testedNotInfectedByRegion.count || 0)
-      setInfectedCases(infectedByRegion.count || 0)
-      setDeceasedCases(deceasedByRegion.count || 0)
+      );
+      setSuspiciousCases(suspiciousCasesByRegion.count || 0);
+      setTestedNotInfectedCases(testedNotInfectedByRegion.count || 0);
+      setInfectedCases(infectedByRegion.count || 0);
+      setDeceasedCases(deceasedByRegion.count || 0);
     }
-  }, [selectedState])
+  }, [selectedState]);
   return (
     <Layout>
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
@@ -124,9 +127,9 @@ export default function Index() {
           textColor="gray"
         ></Card>
         <span className="text-gray-400 text-center">
-          Fonte: Ministério da saúde e Wordometer
+          Fonte: Ministério da saúde e Johns Hopkins
         </span>
       </div>
     </Layout>
-  )
+  );
 }
