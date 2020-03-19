@@ -61,6 +61,7 @@ export function HomeHeader({
         <button
           className="text-white md:w-56"
           onClick={() => {
+            setSelectedState("")
             setSelectKey(key => key + 1)
             getCoronavirusCases()
           }}
