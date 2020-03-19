@@ -5,7 +5,6 @@ import { HomeFooter } from "../components/HomeFooter"
 import { HomeHeader } from "../components/HomeHeader"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import { getUnique } from "../utils/index"
 
 export default function Index() {
   const [coronavirusCases, setCoronavirusCases] = useState([])
@@ -16,8 +15,6 @@ export default function Index() {
   const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
   const [infectedCases, setInfectedCases] = useState(0)
   const [deceasedCases, setDeceasedCases] = useState(0)
-  // eslint-disable-next-line no-unused-vars
-  const [casesByDay, setCasesByDay] = useState([])
 
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
@@ -53,24 +50,7 @@ export default function Index() {
   }
   useEffect(() => {
     getCoronavirusCases()
-    getCasesByDay()
   }, [])
-
-  const getCasesByDay = async () => {
-    try {
-      const response = await axios.get(
-        "https://pomber.github.io/covid19/timeseries.json"
-      )
-      const brazilCasesByDay = response.data.Brazil
-      const nonRepeatedBrazilCasesByDay = getUnique(
-        brazilCasesByDay,
-        "confirmed"
-      )
-      setCasesByDay(nonRepeatedBrazilCasesByDay)
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   return (
     <Layout>
