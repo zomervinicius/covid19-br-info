@@ -55,6 +55,7 @@ export default function Index() {
   return (
     <Layout>
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
+
       <HomeHeader
         {...{
           loadingCoronaVirusCases,

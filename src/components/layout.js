@@ -1,5 +1,7 @@
 import PropTypes from "prop-types"
 import React from "react"
+import { Helmet } from "react-helmet"
+import { Footer } from "./Footer"
 import Header from "./header"
 
 function Layout({ children }) {
@@ -8,35 +10,17 @@ function Layout({ children }) {
       className="flex flex-col font-sans min-h-screen"
       style={{ backgroundColor: "#262529" }}
     >
+      <Helmet>
+        <meta
+          name="google-site-verification"
+          content="4EoBeuccwmG0j_AVpBVN6KbiDkfHYNQTUaepqhEcmfE"
+        />
+      </Helmet>
       <Header />
       <main className="flex flex-col flex-1 mx-auto px-4 py-8 md:p-8 w-full max-w-6xl">
         {children}
       </main>
-
-      <footer className="bg-gray-900">
-        <nav className="flex flex-wrap md:justify-between max-w-6xl mx-auto p-4 md:p-8 text-md">
-          <p className="text-white">
-            Criado por{` `}
-            <a
-              className="font-bold no-underline text-white"
-              href="https://www.linkedin.com/in/vinicius-zomer/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Vinícius Zomer
-            </a>
-          </p>
-
-          <p>
-            <a
-              className="font-bold no-underline text-white"
-              href="mailto:infocoronavirusbr@gmail.com"
-            >
-              infocoronavirusbr@gmail.com
-            </a>
-          </p>
-        </nav>
-      </footer>
+      <Footer />
     </div>
   )
 }
