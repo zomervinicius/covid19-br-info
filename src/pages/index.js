@@ -128,7 +128,6 @@ export default function Index() {
         deceasedCases={deceasedCases}
       />
       <HomeFooter />
-      <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
       {!selectedState && (
         <div className={"max-w my-5 px-3 mt-5"}>
           <div
@@ -158,6 +157,7 @@ export default function Index() {
           </div>
         </div>
       )}
+      <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
     </Layout>
   )
 }
