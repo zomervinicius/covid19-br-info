@@ -99,7 +99,7 @@ export default function Index() {
   }
 
   const isDesktopOrLaptop = useMediaQuery({
-    query: "(min-device-width: 800px)"
+    query: "(min-device-width: 1000px)"
   })
 
   return (
