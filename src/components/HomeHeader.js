@@ -39,7 +39,7 @@ export function HomeHeader({
       setDeceasedCases(deceasedByRegion.count || 0)
       selectedState === "SC" &&
         setInfectedCases(
-          infectedByRegion.count > 14 ? infectedByRegion.count : 14
+          infectedByRegion.count > 20 ? infectedByRegion.count : 20
         )
     }
   }, [selectedState])
