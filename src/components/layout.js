@@ -11,9 +11,16 @@ function Layout({ children }) {
       style={{ backgroundColor: "#262529" }}
     >
       <Helmet>
+        {/*
         <script
           async
           src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        ></script>
+  */}
+        <script
+          data-ad-client="ca-pub-5598257228129274"
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
         ></script>
         <meta
           name="google-site-verification"

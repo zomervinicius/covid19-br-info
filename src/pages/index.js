@@ -1,7 +1,6 @@
 import axios from "axios"
 import { format } from "date-fns"
 import React, { useEffect, useState } from "react"
-import AdSense from "react-adsense"
 import { useMediaQuery } from "react-responsive"
 import {
   CartesianGrid,
@@ -157,7 +156,9 @@ export default function Index() {
           </div>
         </div>
       )}
+      {/*
       <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
+      */}
     </Layout>
   )
 }
