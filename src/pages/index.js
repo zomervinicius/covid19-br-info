@@ -16,37 +16,44 @@ export default function Index() {
   const [infectedCases, setInfectedCases] = useState(0)
   const [deceasedCases, setDeceasedCases] = useState(0)
 
-  const getCoronavirusCases = async () => {
-    setLoadingCoronaVirusCases(true)
-    setSelectedState("")
+  const getWordometerBrazilCases = async () => {
     try {
-      const response = await axios.get(
-        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
-      )
       const brazilConfirmedCases = await axios.get(
         "https://corona.lmao.ninja/countries/Brazil"
       )
       const brazilConfirmedCasesResponse = brazilConfirmedCases.data
+      setInfectedCases(brazilConfirmedCasesResponse.cases)
+      setDeceasedCases(brazilConfirmedCasesResponse.deaths)
+    } catch (error) {
+      console.log(error)
+    }
+    setLoadingCoronaVirusCases(false)
+  }
+
+  const getMinistryOfHealthBrazilAndStatesCases = async () => {
+    try {
+      const response = await axios.get(
+        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
+      )
+
       const allCases = response.data
       setCoronavirusCases(allCases)
       setSuspiciousCases(allCases.suspiciousCases)
       setTestedNotInfectedCases(allCases.testedNotInfected)
-      setInfectedCases(
-        brazilConfirmedCasesResponse.cases > allCases.infected
-          ? brazilConfirmedCasesResponse.cases
-          : allCases.infected
-      )
-      setDeceasedCases(
-        brazilConfirmedCasesResponse.deaths > allCases.deceased
-          ? brazilConfirmedCasesResponse.deaths
-          : allCases.deceased
-      )
-      setLoadingCoronaVirusCases(false)
+      setInfectedCases(allCases.infected)
+      setDeceasedCases(allCases.deceased)
     } catch (error) {
       alert(
         "Não foi possível obter os dados, avise nesse e-mail infocoronavirusbr@gmail.com"
       )
     }
+  }
+
+  const getCoronavirusCases = async () => {
+    setLoadingCoronaVirusCases(true)
+    setSelectedState("")
+    getMinistryOfHealthBrazilAndStatesCases()
+    getWordometerBrazilCases()
   }
   useEffect(() => {
     getCoronavirusCases()
