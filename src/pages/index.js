@@ -42,6 +42,7 @@ export default function Index() {
       setTestedNotInfectedCases(allCases.testedNotInfected)
       setInfectedCases(allCases.infected)
       setDeceasedCases(allCases.deceased)
+      return response
     } catch (error) {
       alert(
         "Não foi possível obter os dados, avise nesse e-mail infocoronavirusbr@gmail.com"
@@ -51,7 +52,7 @@ export default function Index() {
 
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
-    getMinistryOfHealthBrazilAndStatesCases()
+    await getMinistryOfHealthBrazilAndStatesCases()
     getWordometerBrazilCases()
   }
 
