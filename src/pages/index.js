@@ -129,7 +129,7 @@ export default function Index() {
       />
       <HomeFooter />
       <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
-      {selectedState && (
+      {!selectedState && (
         <div className={"max-w my-5 px-3 mt-5"}>
           <div
             className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
