@@ -14,8 +14,8 @@ import {
 import { HomeCards } from "../components/HomeCards"
 import { HomeFooter } from "../components/HomeFooter"
 import { HomeHeader } from "../components/HomeHeader"
-import Layout from "../components/layout"
-import SEO from "../components/seo"
+import Layout from "../components/Layout"
+import SEO from "../components/Seo"
 import { getUnique } from "../utils/index"
 
 export default function Index() {

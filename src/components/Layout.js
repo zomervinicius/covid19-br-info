@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 import React from "react"
 import { Helmet } from "react-helmet"
 import { Footer } from "./Footer"
-import Header from "./header"
+import Header from "./Header"
 
 function Layout({ children }) {
   return (
