@@ -21,7 +21,6 @@ import { getUnique } from "../utils/index"
 export default function Index() {
   const [coronavirusCases, setCoronavirusCases] = useState([])
   const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
-  // eslint-disable-next-line no-unused-vars
   const [selectedState, setSelectedState] = useState("")
   const [suspiciousCases, setSuspiciousCases] = useState(0)
   const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
@@ -31,31 +30,21 @@ export default function Index() {
 
   const getWordometerBrazilCases = async () => {
     try {
-      const brazilConfirmedCases = await axios.get(
+      const brazilConfirmedCasesRealTime = await axios.get(
         "https://corona.lmao.ninja/countries/Brazil"
       )
-      const brazilConfirmedCasesResponse = brazilConfirmedCases.data
-      setInfectedCases(brazilConfirmedCasesResponse.cases)
-      setDeceasedCases(brazilConfirmedCasesResponse.deaths)
+      return brazilConfirmedCasesRealTime.data
     } catch (error) {
       console.log(error)
     }
-    setLoadingCoronaVirusCases(false)
   }
 
   const getMinistryOfHealthBrazilAndStatesCases = async () => {
     try {
-      const response = await axios.get(
+      const allCases = await axios.get(
         "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
       )
-
-      const allCases = response.data
-      setCoronavirusCases(allCases)
-      setSuspiciousCases(allCases.suspiciousCases)
-      setTestedNotInfectedCases(allCases.testedNotInfected)
-      setInfectedCases(allCases.infected)
-      setDeceasedCases(allCases.deceased)
-      return response
+      return allCases.data
     } catch (error) {
       alert(
         "Não foi possível obter os dados, avise nesse e-mail infocoronavirusbr@gmail.com"
@@ -65,8 +54,23 @@ export default function Index() {
 
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
-    await getMinistryOfHealthBrazilAndStatesCases()
-    getWordometerBrazilCases()
+    const allCases = await getMinistryOfHealthBrazilAndStatesCases()
+    const brazilConfirmedCasesRealTime = await getWordometerBrazilCases()
+    setCoronavirusCases(allCases)
+    setSuspiciousCases(allCases.suspiciousCases)
+    setTestedNotInfectedCases(allCases.testedNotInfected)
+    //check which data source is more updated based on data
+    setInfectedCases(
+      brazilConfirmedCasesRealTime?.cases > allCases.infected
+        ? brazilConfirmedCasesRealTime?.cases
+        : allCases.infected
+    )
+    setDeceasedCases(
+      brazilConfirmedCasesRealTime?.deaths > allCases.deceased
+        ? brazilConfirmedCasesRealTime?.deaths
+        : allCases.deceased
+    )
+    setLoadingCoronaVirusCases(false)
   }
 
   useEffect(() => {
