@@ -1,10 +1,11 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
-import Select from "react-select"
-import Card from "../components/card"
+import { HomeCards } from "../components/HomeCards"
+import { HomeFooter } from "../components/HomeFooter"
+import { HomeHeader } from "../components/HomeHeader"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
-import states from "../data/states.json"
+import { getUnique } from "../utils/index"
 
 export default function Index() {
   const [coronavirusCases, setCoronavirusCases] = useState([])
@@ -15,6 +16,9 @@ export default function Index() {
   const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
   const [infectedCases, setInfectedCases] = useState(0)
   const [deceasedCases, setDeceasedCases] = useState(0)
+  // eslint-disable-next-line no-unused-vars
+  const [casesByDay, setCasesByDay] = useState([])
+
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
     setSelectedState("")
@@ -49,84 +53,49 @@ export default function Index() {
   }
   useEffect(() => {
     getCoronavirusCases()
+    getCasesByDay()
   }, [])
 
-  const options = states
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map(state => ({ value: state.abbr, label: state.name }))
-
-  useEffect(() => {
-    if (selectedState) {
-      console.log(selectedState)
-      const suspiciousCasesByRegion = coronavirusCases.suspiciousCasesByRegion.find(
-        item => item.state === selectedState
+  const getCasesByDay = async () => {
+    try {
+      const response = await axios.get(
+        "https://pomber.github.io/covid19/timeseries.json"
       )
-      const testedNotInfectedByRegion = coronavirusCases.testedNotInfectedByRegion.find(
-        item => item.state === selectedState
+      const brazilCasesByDay = response.data.Brazil
+      const nonRepeatedBrazilCasesByDay = getUnique(
+        brazilCasesByDay,
+        "confirmed"
       )
-      const infectedByRegion = coronavirusCases.infectedByRegion.find(
-        item => item.state === selectedState
-      )
-      const deceasedByRegion = coronavirusCases.deceasedByRegion.find(
-        item => item.state === selectedState
-      )
-      setSuspiciousCases(suspiciousCasesByRegion.count || 0)
-      setTestedNotInfectedCases(testedNotInfectedByRegion.count || 0)
-      setInfectedCases(infectedByRegion.count || 0)
-      setDeceasedCases(deceasedByRegion.count || 0)
+      setCasesByDay(nonRepeatedBrazilCasesByDay)
+    } catch (error) {
+      console.log(error)
     }
-  }, [selectedState])
+  }
+
   return (
     <Layout>
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
-      <Select
-        isLoading={loadingCoronaVirusCases}
-        isDisabled={loadingCoronaVirusCases}
-        options={options}
-        placeholder="Selecione um estado..."
-        onChange={value => setSelectedState(value.value)}
-        noOptionsMessage={() => "Não há dados"}
-        defaultValue={selectedState}
-        className="mb-5"
+      <HomeHeader
+        {...{
+          loadingCoronaVirusCases,
+          setSelectedState,
+          selectedState,
+          coronavirusCases,
+          setSuspiciousCases,
+          setTestedNotInfectedCases,
+          setInfectedCases,
+          setDeceasedCases,
+          getCoronavirusCases
+        }}
       />
-      {selectedState && (
-        <button
-          className="text-white  md:w-56"
-          onClick={() => getCoronavirusCases()}
-        >
-          Voltar para os dados do Brasil
-        </button>
-      )}
-      <Card
-        title="Casos suspeitos"
-        description={suspiciousCases}
+      <HomeCards
+        suspiciousCases={suspiciousCases}
         loadingCoronaVirusCases={loadingCoronaVirusCases}
-        full
-        textColor="blue"
-      ></Card>
-      <div className="flex flex-wrap">
-        <Card
-          title="Casos confirmados"
-          loadingCoronaVirusCases={loadingCoronaVirusCases}
-          textColor="red"
-          description={infectedCases}
-        ></Card>
-        <Card
-          loadingCoronaVirusCases={loadingCoronaVirusCases}
-          title="Casos descartados"
-          description={testedNotInfectedCases}
-          textColor="green"
-        ></Card>
-        <Card
-          loadingCoronaVirusCases={loadingCoronaVirusCases}
-          title="Mortes"
-          description={deceasedCases}
-          textColor="gray"
-        ></Card>
-        <span className="text-gray-400 text-center">
-          Fonte: Ministério da saúde e Wordometer
-        </span>
-      </div>
+        infectedCases={infectedCases}
+        testedNotInfectedCases={testedNotInfectedCases}
+        deceasedCases={deceasedCases}
+      />
+      <HomeFooter />
     </Layout>
   )
 }

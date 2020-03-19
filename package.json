@@ -22,7 +22,8 @@
     "react-helmet": "5.2.1",
     "react-leaflet": "^2.6.3",
     "react-leaflet-markercluster": "^1.1.8",
-    "react-select": "^3.0.8"
+    "react-select": "^3.0.8",
+    "recharts": "^1.8.5"
   },
   "keywords": [
     "gatsby",
