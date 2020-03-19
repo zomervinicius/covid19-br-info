@@ -14,21 +14,25 @@ export function HomeCards({
       <Card
         title="Casos suspeitos"
         description={suspiciousCases}
+        className="max-w my-5"
         loadingCoronaVirusCases={loadingCoronaVirusCases}
         full
       ></Card>
       <div className="flex flex-wrap">
         <Card
           title="Casos confirmados"
+          className="max-w-sm w-full md:w-1/3 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           description={infectedCases}
         ></Card>
         <Card
+          className="max-w-sm w-full md:w-1/3 px-6 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           title="Casos descartados"
           description={testedNotInfectedCases}
         ></Card>
         <Card
+          className="max-w-sm w-full md:w-1/3 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           title="Mortes"
           description={deceasedCases}

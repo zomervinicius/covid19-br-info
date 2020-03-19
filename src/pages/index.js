@@ -128,7 +128,7 @@ export default function Index() {
       />
       <HomeFooter />
       {!selectedState && (
-        <div className={"max-w my-5 px-3 mt-5"}>
+        <div className={"max-w mt-5"}>
           <div
             className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
             style={{ backgroundColor: "#212024" }}
