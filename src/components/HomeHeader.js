@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Select from "react-select"
 import states from "../data/states.json"
 
@@ -14,6 +14,7 @@ export function HomeHeader({
   setDeceasedCases,
   getCoronavirusCases
 }) {
+  const [selectKey, setSelectKey] = useState(0)
   const options = states
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(state => ({ value: state.abbr, label: state.name }))
@@ -48,6 +49,7 @@ export function HomeHeader({
       <Select
         isLoading={loadingCoronaVirusCases}
         isDisabled={loadingCoronaVirusCases}
+        key={selectKey}
         options={options}
         placeholder="Selecione um estado..."
         onChange={value => setSelectedState(value.value)}
@@ -59,7 +61,7 @@ export function HomeHeader({
         <button
           className="text-white md:w-56"
           onClick={() => {
-            setSelectedState("")
+            setSelectKey(key => key + 1)
             getCoronavirusCases()
           }}
         >
