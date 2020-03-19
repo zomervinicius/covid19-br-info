@@ -57,8 +57,11 @@ export function HomeHeader({
       />
       {selectedState && (
         <button
-          className="text-white  md:w-56"
-          onClick={() => getCoronavirusCases()}
+          className="text-white md:w-56"
+          onClick={() => {
+            setSelectedState("")
+            getCoronavirusCases()
+          }}
         >
           Voltar para os dados do Brasil
         </button>

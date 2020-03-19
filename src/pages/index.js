@@ -51,10 +51,10 @@ export default function Index() {
 
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
-    setSelectedState("")
     getMinistryOfHealthBrazilAndStatesCases()
     getWordometerBrazilCases()
   }
+
   useEffect(() => {
     getCoronavirusCases()
   }, [])
