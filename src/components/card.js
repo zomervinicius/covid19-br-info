@@ -17,7 +17,7 @@ export default function Card({
         className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-8 px-12  flex flex-col text-center"
         style={{ backgroundColor: "#212024" }}
       >
-        <span className="text-gray-400 text-base">{title}</span>
+        <span className="text-gray-400 text-lg">{title}</span>
         <span className="text-white text-6xl">
           {loadingCoronaVirusCases ? "..." : description}
         </span>
