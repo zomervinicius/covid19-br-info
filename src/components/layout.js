@@ -12,9 +12,8 @@ function Layout({ children }) {
     >
       <Helmet>
         <script
-          data-ad-client="ca-pub-5598257228129274"
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
         ></script>
         <meta
           name="google-site-verification"

@@ -1,6 +1,7 @@
 import axios from "axios"
 import { format } from "date-fns"
 import React, { useEffect, useState } from "react"
+import AdSense from "react-adsense"
 import { useMediaQuery } from "react-responsive"
 import {
   CartesianGrid,
@@ -127,33 +128,36 @@ export default function Index() {
         deceasedCases={deceasedCases}
       />
       <HomeFooter />
-      <div className={"max-w my-5 px-3 mt-5"}>
-        <div
-          className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
-          style={{ backgroundColor: "#212024" }}
-        >
-          <span className="text-gray-400 text-lg">Relatório diário</span>
-          <ResponsiveContainer height={isDesktopOrLaptop ? 500 : 350}>
-            <LineChart
-              data={casesByDay}
-              margin={{ left: 0, right: 16, top: 24, bottom: 24 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                textAnchor="middle"
-                tick={{ fontSize: 16, angle: -25, stroke: "white" }}
-                tickMargin={20}
-              />
-              <YAxis dataKey="confirmed" />
-              <Tooltip label="date" />
-              <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
-              <Line dataKey="deaths" name="Mortes" stroke="black" />
-              <Line dataKey="recovered" name="Recuperados" stroke="#2ecc71" />
-            </LineChart>
-          </ResponsiveContainer>
+      <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
+      {selectedState && (
+        <div className={"max-w my-5 px-3 mt-5"}>
+          <div
+            className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
+            style={{ backgroundColor: "#212024" }}
+          >
+            <span className="text-gray-400 text-lg">Relatório diário</span>
+            <ResponsiveContainer height={isDesktopOrLaptop ? 500 : 350}>
+              <LineChart
+                data={casesByDay}
+                margin={{ left: 0, right: 16, top: 24, bottom: 24 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="date"
+                  textAnchor="middle"
+                  tick={{ fontSize: 16, angle: -25, stroke: "white" }}
+                  tickMargin={20}
+                />
+                <YAxis dataKey="confirmed" />
+                <Tooltip label="date" />
+                <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
+                <Line dataKey="deaths" name="Mortes" stroke="black" />
+                <Line dataKey="recovered" name="Recuperados" stroke="#2ecc71" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-      </div>
+      )}
     </Layout>
   )
 }
