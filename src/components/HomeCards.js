@@ -26,7 +26,7 @@ export function HomeCards({
           description={infectedCases}
         ></Card>
         <Card
-          className="max-w-sm w-full md:w-1/3 px-6 mb-5"
+          className="max-w-sm w-full md:w-1/3 md:px-6 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           title="Casos descartados"
           description={testedNotInfectedCases}
