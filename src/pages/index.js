@@ -1,7 +1,7 @@
 import axios from "axios"
 import { format } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { useMediaQuery } from "react-responsive"
+import { isMobile } from "react-device-detect"
 import {
   CartesianGrid,
   Line,
@@ -102,10 +102,6 @@ export default function Index() {
     }
   }
 
-  const isDesktopOrLaptop = useMediaQuery({
-    query: "(min-device-width: 1000px)"
-  })
-
   return (
     <Layout>
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
@@ -138,7 +134,7 @@ export default function Index() {
             style={{ backgroundColor: "#212024" }}
           >
             <span className="text-gray-400 text-lg">Relatório diário</span>
-            <ResponsiveContainer height={isDesktopOrLaptop ? 500 : 350}>
+            <ResponsiveContainer height={isMobile ? 350 : 500}>
               <LineChart
                 data={casesByDay}
                 margin={{ left: 0, right: 16, top: 24, bottom: 24 }}

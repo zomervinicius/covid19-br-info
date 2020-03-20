@@ -20,7 +20,6 @@
     "react-device-detect": "^1.11.14",
     "react-dom": "16.13.0",
     "react-helmet": "^5.2.1",
-    "react-responsive": "^8.0.3",
     "react-select": "^3.0.8",
     "recharts": "^1.8.5"
   },
