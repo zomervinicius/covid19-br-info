@@ -1,9 +1,9 @@
 import PropTypes from "prop-types"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import Select from "react-select"
 import states from "../data/states.json"
 
-export function HomeHeader({
+export function StateSelect({
   loadingCoronaVirusCases,
   setSelectedState,
   selectedState,
@@ -12,9 +12,9 @@ export function HomeHeader({
   setTestedNotInfectedCases,
   setInfectedCases,
   setDeceasedCases,
-  getCoronavirusCases
+  selectKey,
+  setSelectKey
 }) {
-  const [selectKey, setSelectKey] = useState(0)
   const options = states
     .sort((a, b) => a.name.localeCompare(b.name))
     .map(state => ({ value: state.abbr, label: state.name }))
@@ -62,7 +62,6 @@ export function HomeHeader({
           onClick={() => {
             setSelectedState("")
             setSelectKey(key => key + 1)
-            getCoronavirusCases()
           }}
         >
           Voltar para os dados do Brasil
@@ -72,13 +71,14 @@ export function HomeHeader({
   )
 }
 
-HomeHeader.propTypes = {
+StateSelect.propTypes = {
   coronavirusCases: PropTypes.any,
-  getCoronavirusCases: PropTypes.any,
   loadingCoronaVirusCases: PropTypes.any,
+  selectKey: PropTypes.any,
   selectedState: PropTypes.any,
   setDeceasedCases: PropTypes.any,
   setInfectedCases: PropTypes.any,
+  setSelectKey: PropTypes.any,
   setSelectedState: PropTypes.any,
   setSuspiciousCases: PropTypes.any,
   setTestedNotInfectedCases: PropTypes.any

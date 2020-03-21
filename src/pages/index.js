@@ -1,105 +1,36 @@
-import axios from "axios"
-import { format } from "date-fns"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
-import { HomeCards } from "../components/HomeCards"
-import { HomeFooter } from "../components/HomeFooter"
-import { HomeHeader } from "../components/HomeHeader"
+import Card from "../components/InfoCard"
 import Layout from "../components/Layout"
 import SEO from "../components/Seo"
-import { getUnique } from "../utils/index"
+import { StateSelect } from "../components/StateSelect"
+import {
+  useCoronavirusData,
+  useCoronavirusHistoryData
+} from "../utils/customHooks"
 import { LoadingChart } from "./../components/LoadingChart"
 
 export default function Index() {
-  const [coronavirusCases, setCoronavirusCases] = useState([])
-  const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
-  const [loadingCasesByDay, setLoadingCasesByDay] = useState(true)
   const [selectedState, setSelectedState] = useState("")
   const [suspiciousCases, setSuspiciousCases] = useState(0)
   const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
   const [infectedCases, setInfectedCases] = useState(0)
   const [deceasedCases, setDeceasedCases] = useState(0)
-  const [casesByDay, setCasesByDay] = useState([])
-
-  const getWordometerBrazilCases = async () => {
-    try {
-      const brazilConfirmedCasesRealTime = await axios.get(
-        "https://corona.lmao.ninja/countries/Brazil"
-      )
-      return brazilConfirmedCasesRealTime.data
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getMinistryOfHealthBrazilAndStatesCases = async () => {
-    try {
-      const allCases = await axios.get(
-        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
-      )
-      return allCases.data
-    } catch (error) {
-      alert("Não foi possível obter os dados, tente novamente mais tarde")
-    }
-  }
-
-  const getCoronavirusCases = async () => {
-    setLoadingCoronaVirusCases(true)
-    const allCases = await getMinistryOfHealthBrazilAndStatesCases()
-    const brazilConfirmedCasesRealTime = await getWordometerBrazilCases()
-    allCases && setCoronavirusCases(allCases)
-    setSuspiciousCases(allCases?.suspiciousCases || 0)
-    setTestedNotInfectedCases(allCases?.testedNotInfected || 0)
-    //check which data source is more updated based on data
-    setInfectedCases(
-      brazilConfirmedCasesRealTime?.cases > allCases?.infected
-        ? brazilConfirmedCasesRealTime?.cases
-        : allCases?.infected || 0
-    )
-    setDeceasedCases(
-      brazilConfirmedCasesRealTime?.deaths > allCases?.deceased
-        ? brazilConfirmedCasesRealTime?.deaths
-        : allCases?.deceased || 0
-    )
-    setLoadingCoronaVirusCases(false)
-  }
-
-  useEffect(() => {
-    getCoronavirusCases()
-    getCasesByDay()
-  }, [])
-
-  const getCasesByDay = async () => {
-    setLoadingCasesByDay(true)
-    try {
-      const response = await axios.get(
-        "https://pomber.github.io/covid19/timeseries.json"
-      )
-      const brazilCasesByDay = response.data.Brazil
-      const nonRepeatedBrazilCasesByDay = getUnique(
-        brazilCasesByDay,
-        "confirmed"
-      )
-      const nonRepeatedBrazilCasesByDayWithFormattedDate = nonRepeatedBrazilCasesByDay.map(
-        casesByDay => ({
-          date: format(new Date(casesByDay.date), "dd/MM/yyyy"),
-          confirmed: casesByDay.confirmed,
-          deaths: casesByDay.deaths,
-          recovered: casesByDay.recovered
-        })
-      )
-      setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
-    } catch (error) {
-      console.log(error)
-    }
-    setLoadingCasesByDay(false)
-  }
+  const [selectKey, setSelectKey] = useState(0)
+  const { coronavirusCases, loadingCoronaVirusCases } = useCoronavirusData(
+    setSuspiciousCases,
+    setTestedNotInfectedCases,
+    setInfectedCases,
+    setDeceasedCases,
+    selectKey
+  )
+  const { casesByDay, loadingCasesByDay } = useCoronavirusHistoryData()
 
   return (
     <Layout>
       <SEO keywords={[`coronavirus`, `brasil`, `casos`]} title="Home" />
 
-      <HomeHeader
+      <StateSelect
         {...{
           loadingCoronaVirusCases,
           setSelectedState,
@@ -109,17 +40,37 @@ export default function Index() {
           setTestedNotInfectedCases,
           setInfectedCases,
           setDeceasedCases,
-          getCoronavirusCases
+          selectKey,
+          setSelectKey
         }}
       />
-      <HomeCards
-        suspiciousCases={suspiciousCases}
+      <Card
+        title="Casos suspeitos"
+        description={suspiciousCases}
+        className="max-w my-5"
         loadingCoronaVirusCases={loadingCoronaVirusCases}
-        infectedCases={infectedCases}
-        testedNotInfectedCases={testedNotInfectedCases}
-        deceasedCases={deceasedCases}
-      />
-
+        full
+      ></Card>
+      <div className="flex flex-wrap">
+        <Card
+          title="Casos confirmados"
+          className="max-w w-full md:w-1/3 mb-5"
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          description={infectedCases}
+        ></Card>
+        <Card
+          className="max-w w-full md:w-1/3 md:px-4 mb-5"
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          title="Casos descartados"
+          description={testedNotInfectedCases}
+        ></Card>
+        <Card
+          className="max-w w-full md:w-1/3 mb-5"
+          loadingCoronaVirusCases={loadingCoronaVirusCases}
+          title="Mortes"
+          description={deceasedCases}
+        ></Card>
+      </div>
       {!selectedState && (
         <LoadingChart
           loading={loadingCasesByDay}
@@ -154,7 +105,9 @@ export default function Index() {
           </LineChart>
         </LoadingChart>
       )}
-      <HomeFooter />
+      <span className="text-gray-400 text-left mt-5">
+        Fontes: Ministério da saúde; Wordometer; Johns Hopkings
+      </span>
     </Layout>
   )
 }
