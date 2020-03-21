@@ -157,9 +157,6 @@ export default function Index() {
         </div>
       )}
       <HomeFooter />
-      {/*
-      <AdSense.Google client="ca-pub-5598257228129274" slot="7806394673" />
-      */}
     </Layout>
   )
 }
