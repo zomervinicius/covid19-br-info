@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `Coronavírus Brasil`,
     description: `Demonstrar dados do coronavírus no Brasil`,
-    author: `@taylorbryant`
+    author: `@zomervinicius`
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
