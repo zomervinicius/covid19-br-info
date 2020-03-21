@@ -10,10 +10,10 @@ module.exports = {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `Coronavírus Brasil`,
-        short_name: `COVID-19 BR`,
+        short_name: `Coronavírus Brasil`,
         start_url: `/`,
         background_color: `#ffffff`,
-        theme_color: `#f44336`,
+        theme_color: `#000000`,
         display: `minimal-ui`,
         icon: `src/images/coronavirusImg.png`
       }
