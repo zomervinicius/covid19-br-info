@@ -1,6 +1,6 @@
 {
-  "name": "gatsby-starter-tailwind",
-  "description": "Gatsby starter styled with Tailwind",
+  "name": "covid-19-br",
+  "description": "Demonstrar dados do coronavírus no Brasil",
   "version": "4.0.0",
   "author": "Taylor Bryant <taylor@bryant.io>",
   "dependencies": {
