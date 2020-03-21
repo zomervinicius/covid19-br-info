@@ -2,7 +2,7 @@
   "name": "covid-19-br",
   "description": "Demonstrar dados do coronavírus no Brasil",
   "version": "4.0.0",
-  "author": "Taylor Bryant <taylor@bryant.io>",
+  "author": "Vinícius Zomer <vinicius.zomer123@gmail.com>",
   "dependencies": {
     "axios": "^0.19.2",
     "date-fns": "^2.11.0",

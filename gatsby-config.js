@@ -12,8 +12,8 @@ module.exports = {
         name: `Coronavírus Brasil`,
         short_name: `Coronavírus Brasil`,
         start_url: `/`,
-        background_color: `#ffffff`,
-        theme_color: `#000000`,
+        background_color: `#000000`,
+        theme_color: `#f44336`,
         display: `minimal-ui`,
         icon: `src/images/coronavirusImg.png`
       }
