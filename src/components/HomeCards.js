@@ -21,18 +21,18 @@ export function HomeCards({
       <div className="flex flex-wrap">
         <Card
           title="Casos confirmados"
-          className="max-w-sm w-full md:w-1/3 mb-5"
+          className="max-w w-full md:w-1/3 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           description={infectedCases}
         ></Card>
         <Card
-          className="max-w-sm w-full md:w-1/3 md:px-6 mb-5"
+          className="max-w w-full md:w-1/3 md:px-4 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           title="Casos descartados"
           description={testedNotInfectedCases}
         ></Card>
         <Card
-          className="max-w-sm w-full md:w-1/3 mb-5"
+          className="max-w w-full md:w-1/3 mb-5"
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           title="Mortes"
           description={deceasedCases}

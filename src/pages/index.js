@@ -1,26 +1,19 @@
 import axios from "axios"
 import { format } from "date-fns"
 import React, { useEffect, useState } from "react"
-import { isMobile } from "react-device-detect"
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from "recharts"
+import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts"
 import { HomeCards } from "../components/HomeCards"
 import { HomeFooter } from "../components/HomeFooter"
 import { HomeHeader } from "../components/HomeHeader"
 import Layout from "../components/Layout"
 import SEO from "../components/Seo"
 import { getUnique } from "../utils/index"
+import { LoadingChart } from "./../components/LoadingChart"
 
 export default function Index() {
   const [coronavirusCases, setCoronavirusCases] = useState([])
   const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
+  const [loadingCasesByDay, setLoadingCasesByDay] = useState(true)
   const [selectedState, setSelectedState] = useState("")
   const [suspiciousCases, setSuspiciousCases] = useState(0)
   const [testedNotInfectedCases, setTestedNotInfectedCases] = useState(0)
@@ -46,9 +39,7 @@ export default function Index() {
       )
       return allCases.data
     } catch (error) {
-      alert(
-        "Não foi possível obter os dados, avise nesse e-mail infocoronavirusbr@gmail.com"
-      )
+      alert("Não foi possível obter os dados, tente novamente mais tarde")
     }
   }
 
@@ -56,19 +47,19 @@ export default function Index() {
     setLoadingCoronaVirusCases(true)
     const allCases = await getMinistryOfHealthBrazilAndStatesCases()
     const brazilConfirmedCasesRealTime = await getWordometerBrazilCases()
-    setCoronavirusCases(allCases)
-    setSuspiciousCases(allCases.suspiciousCases)
-    setTestedNotInfectedCases(allCases.testedNotInfected)
+    allCases && setCoronavirusCases(allCases)
+    setSuspiciousCases(allCases?.suspiciousCases || 0)
+    setTestedNotInfectedCases(allCases?.testedNotInfected || 0)
     //check which data source is more updated based on data
     setInfectedCases(
-      brazilConfirmedCasesRealTime?.cases > allCases.infected
+      brazilConfirmedCasesRealTime?.cases > allCases?.infected
         ? brazilConfirmedCasesRealTime?.cases
-        : allCases.infected
+        : allCases?.infected || 0
     )
     setDeceasedCases(
-      brazilConfirmedCasesRealTime?.deaths > allCases.deceased
+      brazilConfirmedCasesRealTime?.deaths > allCases?.deceased
         ? brazilConfirmedCasesRealTime?.deaths
-        : allCases.deceased
+        : allCases?.deceased || 0
     )
     setLoadingCoronaVirusCases(false)
   }
@@ -79,6 +70,7 @@ export default function Index() {
   }, [])
 
   const getCasesByDay = async () => {
+    setLoadingCasesByDay(true)
     try {
       const response = await axios.get(
         "https://pomber.github.io/covid19/timeseries.json"
@@ -100,6 +92,7 @@ export default function Index() {
     } catch (error) {
       console.log(error)
     }
+    setLoadingCasesByDay(false)
   }
 
   return (
@@ -128,33 +121,38 @@ export default function Index() {
       />
 
       {!selectedState && (
-        <div className={"max-w mt-5"}>
-          <div
-            className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
-            style={{ backgroundColor: "#212024" }}
+        <LoadingChart
+          loading={loadingCasesByDay}
+          chartData={casesByDay}
+          chartTitle="Relatório diário"
+        >
+          <LineChart
+            data={casesByDay}
+            margin={{
+              left: 0,
+              right: 16,
+              top: 24,
+              bottom: 24
+            }}
           >
-            <span className="text-gray-400 text-lg">Relatório diário</span>
-            <ResponsiveContainer height={isMobile ? 350 : 500}>
-              <LineChart
-                data={casesByDay}
-                margin={{ left: 0, right: 16, top: 24, bottom: 24 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="date"
-                  textAnchor="middle"
-                  tick={{ fontSize: 16, angle: -25, stroke: "white" }}
-                  tickMargin={20}
-                />
-                <YAxis dataKey="confirmed" />
-                <Tooltip label="date" />
-                <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
-                <Line dataKey="deaths" name="Mortes" stroke="black" />
-                <Line dataKey="recovered" name="Recuperados" stroke="#2ecc71" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="date"
+              textAnchor="middle"
+              tick={{
+                fontSize: 16,
+                angle: -25,
+                stroke: "white"
+              }}
+              tickMargin={20}
+            />
+            <YAxis dataKey="confirmed" />
+            <Tooltip label="date" />
+            <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
+            <Line dataKey="deaths" name="Mortes" stroke="black" />
+            <Line dataKey="recovered" name="Recuperados" stroke="#2ecc71" />
+          </LineChart>
+        </LoadingChart>
       )}
       <HomeFooter />
     </Layout>

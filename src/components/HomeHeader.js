@@ -20,8 +20,7 @@ export function HomeHeader({
     .map(state => ({ value: state.abbr, label: state.name }))
 
   useEffect(() => {
-    if (selectedState) {
-      console.log(selectedState)
+    if (selectedState && coronavirusCases.length > 0) {
       const suspiciousCasesByRegion = coronavirusCases.suspiciousCasesByRegion.find(
         item => item.state === selectedState
       )
