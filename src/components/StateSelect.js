@@ -39,7 +39,7 @@ export function StateSelect({
       setDeceasedCases(deceasedByRegion.count || 0)
       if (selectedState === "SC") {
         setInfectedCases(
-          infectedByRegion.count > 57 ? infectedByRegion.count : 57
+          infectedByRegion.count > 68 ? infectedByRegion.count : 68
         )
         setSuspiciousCases(
           suspiciousCasesByRegion.count > 410
