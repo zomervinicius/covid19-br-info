@@ -5,7 +5,7 @@ import { ResponsiveContainer } from "recharts"
 
 export function LoadingChart({ loading, chartData, children, chartTitle }) {
   return (
-    <div className={"max-w mt-5"}>
+    <div className={"max-w"}>
       <div
         className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
         style={{
