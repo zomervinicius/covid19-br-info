@@ -37,10 +37,16 @@ export function StateSelect({
       setTestedNotInfectedCases(testedNotInfectedByRegion.count || 0)
       setInfectedCases(infectedByRegion.count || 0)
       setDeceasedCases(deceasedByRegion.count || 0)
-      selectedState === "SC" &&
+      if (selectedState === "SC") {
         setInfectedCases(
-          infectedByRegion.count > 51 ? infectedByRegion.count : 51
+          infectedByRegion.count > 57 ? infectedByRegion.count : 57
         )
+        setSuspiciousCases(
+          suspiciousCasesByRegion.count > 410
+            ? suspiciousCasesByRegion.count
+            : 410
+        )
+      }
     }
   }, [selectedState])
   return (
@@ -57,15 +63,17 @@ export function StateSelect({
         className="mb-5"
       />
       {selectedState && (
-        <button
-          className="text-white md:w-56"
-          onClick={() => {
-            setSelectedState("")
-            setSelectKey(key => key + 1)
-          }}
-        >
-          Voltar para os dados do Brasil
-        </button>
+        <div>
+          <button
+            className="text-white"
+            onClick={() => {
+              setSelectedState("")
+              setSelectKey(key => key + 1)
+            }}
+          >
+            Voltar para os dados do Brasil
+          </button>
+        </div>
       )}
     </React.Fragment>
   )
