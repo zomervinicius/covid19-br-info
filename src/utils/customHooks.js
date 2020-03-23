@@ -78,7 +78,7 @@ export function useCoronavirusHistoryData() {
       )
       setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
     } catch (error) {
-      console.log(error)
+      //console.log(error)
     }
     setLoadingCasesByDay(false)
   }
