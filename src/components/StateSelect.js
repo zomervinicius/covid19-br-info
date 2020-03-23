@@ -7,13 +7,10 @@ export function StateSelect({
   loadingCoronaVirusCases,
   setSelectedState,
   selectedState,
-  coronavirusCases,
-  setSuspiciousCases,
-  setTestedNotInfectedCases,
   setInfectedCases,
   setDeceasedCases,
-  selectKey,
-  setSelectKey
+  brazilCoronavirusCases,
+  selectKey
 }) {
   const options = states
     .sort((a, b) => a.name.localeCompare(b.name))
@@ -21,30 +18,19 @@ export function StateSelect({
 
   useEffect(() => {
     if (selectedState) {
-      const suspiciousCasesByRegion = coronavirusCases.suspiciousCasesByRegion.find(
-        item => item.state === selectedState
+      const stateData = brazilCoronavirusCases.find(
+        item => item[1] === selectedState
       )
-      const testedNotInfectedByRegion = coronavirusCases.testedNotInfectedByRegion.find(
-        item => item.state === selectedState
-      )
-      const infectedByRegion = coronavirusCases.infectedByRegion.find(
-        item => item.state === selectedState
-      )
-      const deceasedByRegion = coronavirusCases.deceasedByRegion.find(
-        item => item.state === selectedState
-      )
-      setSuspiciousCases(suspiciousCasesByRegion.count || 0)
-      setTestedNotInfectedCases(testedNotInfectedByRegion.count || 0)
-      setInfectedCases(infectedByRegion.count || 0)
-      setDeceasedCases(deceasedByRegion.count || 0)
+      const infectedCases = stateData[3]
+      const deceasedCases = stateData[5]
+      setInfectedCases(infectedCases)
+      setDeceasedCases(deceasedCases)
       if (selectedState === "SC") {
+        const updatedInfectedCases = 68
         setInfectedCases(
-          infectedByRegion.count > 68 ? infectedByRegion.count : 68
-        )
-        setSuspiciousCases(
-          suspiciousCasesByRegion.count > 410
-            ? suspiciousCasesByRegion.count
-            : 410
+          infectedCases > updatedInfectedCases
+            ? infectedCases
+            : updatedInfectedCases
         )
       }
     }
@@ -62,32 +48,16 @@ export function StateSelect({
         defaultValue={selectedState}
         className="mb-5"
       />
-      {selectedState && (
-        <div>
-          <button
-            className="text-white"
-            onClick={() => {
-              setSelectedState("")
-              setSelectKey(key => key + 1)
-            }}
-          >
-            Voltar para os dados do Brasil
-          </button>
-        </div>
-      )}
     </React.Fragment>
   )
 }
 
 StateSelect.propTypes = {
-  coronavirusCases: PropTypes.any,
-  loadingCoronaVirusCases: PropTypes.any,
-  selectKey: PropTypes.any,
-  selectedState: PropTypes.any,
-  setDeceasedCases: PropTypes.any,
-  setInfectedCases: PropTypes.any,
-  setSelectKey: PropTypes.any,
-  setSelectedState: PropTypes.any,
-  setSuspiciousCases: PropTypes.any,
-  setTestedNotInfectedCases: PropTypes.any
+  brazilCoronavirusCases: PropTypes.array,
+  loadingCoronaVirusCases: PropTypes.bool,
+  selectKey: PropTypes.number,
+  selectedState: PropTypes.string,
+  setDeceasedCases: PropTypes.func,
+  setInfectedCases: PropTypes.func,
+  setSelectedState: PropTypes.func
 }

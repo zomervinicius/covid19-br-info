@@ -54,6 +54,7 @@ module.exports = {
           failOnError: false
         }
       }
-    }
+    },
+    `gatsby-plugin-less`
   ]
 }

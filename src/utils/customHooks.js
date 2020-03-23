@@ -1,72 +1,56 @@
 import axios from "axios"
+import csv from "csvtojson"
 import { format } from "date-fns"
 import { useEffect, useState } from "react"
 import { getUnique } from "../utils"
 
 export function useCoronavirusData(
-  setSuspiciousCases,
-  setTestedNotInfectedCases,
   setInfectedCases,
   setDeceasedCases,
   selectKey
 ) {
-  const [coronavirusCases, setCoronavirusCases] = useState([])
+  brazilCoronavirusCases
   const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
-  const getWordometerBrazilCases = async () => {
+  const [brazilCoronavirusCases, setBrazilCoronavirusCases] = useState(true)
+  const getMinistryOfHealthData = async () => {
     try {
-      const brazilConfirmedCasesRealTime = await axios.get(
-        "https://corona.lmao.ninja/countries/Brazil"
+      const response = await axios.get(
+        "https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-total.csv"
       )
-      return brazilConfirmedCasesRealTime.data
+      const brazilCasesCsv = response.data
+      const brazilCasesJson = csv({
+        output: "csv"
+      })
+        .fromString(brazilCasesCsv)
+        .then(function(brazilCasesJson) {
+          return brazilCasesJson
+        })
+      return brazilCasesJson
     } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const getMinistryOfHealthBrazilAndStatesCases = async () => {
-    try {
-      const allCases = await axios.get(
-        "https://api.apify.com/v2/key-value-stores/TyToNta7jGKkpszMZ/records/LATEST?disableRedirect=true"
-      )
-      return allCases.data
-    } catch (error) {
-      console.log(error)
       alert("Não foi possível obter os dados, tente novamente mais tarde")
     }
+    return []
   }
 
   const getCoronavirusCases = async () => {
     setLoadingCoronaVirusCases(true)
-    const allCases = await getMinistryOfHealthBrazilAndStatesCases()
-    const brazilConfirmedCasesRealTime = await getWordometerBrazilCases()
-    allCases && setCoronavirusCases(allCases)
-    setSuspiciousCases(allCases?.suspiciousCases || 0)
-    setTestedNotInfectedCases(allCases?.testedNotInfected || 0)
-    //check which data source is more updated based on data
-    setInfectedCases(
-      brazilConfirmedCasesRealTime?.cases > allCases?.infected
-        ? brazilConfirmedCasesRealTime?.cases
-        : allCases?.infected || 0
-    )
-    setDeceasedCases(
-      brazilConfirmedCasesRealTime?.deaths > allCases?.deceased
-        ? brazilConfirmedCasesRealTime?.deaths
-        : allCases?.deceased || 0
-    )
+    const brazilConfirmedCasesRealTime = await getMinistryOfHealthData()
+    try {
+      setBrazilCoronavirusCases(brazilConfirmedCasesRealTime)
+      setInfectedCases(brazilConfirmedCasesRealTime[0][2] || 0)
+      setDeceasedCases(brazilConfirmedCasesRealTime[0][5] || 0)
+    } catch (error) {
+      alert("Não foi possível obter os dados, tente novamente mais tarde")
+    }
     setLoadingCoronaVirusCases(false)
   }
 
   useEffect(() => {
-    getCoronavirusCases(
-      setSuspiciousCases,
-      setTestedNotInfectedCases,
-      setInfectedCases,
-      setDeceasedCases
-    )
+    getCoronavirusCases()
     //should reload data
   }, [selectKey])
 
-  return { coronavirusCases, loadingCoronaVirusCases }
+  return { brazilCoronavirusCases, loadingCoronaVirusCases }
 }
 
 export function useCoronavirusHistoryData() {
