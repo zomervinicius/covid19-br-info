@@ -9,7 +9,6 @@ export function useCoronavirusData(
   setDeceasedCases,
   selectKey
 ) {
-  brazilCoronavirusCases
   const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
   const [brazilCoronavirusCases, setBrazilCoronavirusCases] = useState(true)
   const getMinistryOfHealthData = async () => {
