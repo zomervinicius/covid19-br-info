@@ -21,7 +21,10 @@ export default function Index() {
     brazilCoronavirusCases,
     loadingCoronaVirusCases
   } = useCoronavirusData(setInfectedCases, setDeceasedCases, selectKey)
-  const { casesByDay, loadingCasesByDay } = useCoronavirusHistoryData()
+  const { casesByDay, loadingCasesByDay } = useCoronavirusHistoryData(
+    selectedState,
+    selectedCity
+  )
 
   return (
     <Layout>
@@ -94,7 +97,7 @@ export default function Index() {
           />
         )}
       </div>
-      {!selectedState && !selectedCity && (
+      {
         <LoadingChart
           loading={loadingCasesByDay}
           chartData={casesByDay}
@@ -123,11 +126,10 @@ export default function Index() {
             <YAxis dataKey="confirmed" />
             <Tooltip label="date" />
             <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
-            <Line dataKey="deaths" name="Mortes" stroke="black" />
-            <Line dataKey="recovered" name="Recuperados" stroke="#2ecc71" />
+            <Line dataKey="newCases" name="Novo casos" stroke="#f57c00" />
           </LineChart>
         </LoadingChart>
-      )}
+      }
       <span className="text-gray-400 text-left mt-5">
         Fontes: Ministério da saúde; Wordometer; Johns Hopkings
       </span>

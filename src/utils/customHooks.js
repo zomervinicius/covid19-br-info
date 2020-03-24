@@ -1,8 +1,7 @@
 import axios from "axios"
 import csv from "csvtojson"
-import { format } from "date-fns"
+import dayjs from "dayjs"
 import { useEffect, useState } from "react"
-import { getUnique } from "../utils"
 
 export function useCoronavirusData(
   setInfectedCases,
@@ -52,7 +51,7 @@ export function useCoronavirusData(
   return { brazilCoronavirusCases, loadingCoronaVirusCases }
 }
 
-export function useCoronavirusHistoryData() {
+export function useCoronavirusHistoryData(selectedState, selectedCity) {
   const [loadingCasesByDay, setLoadingCasesByDay] = useState(true)
   const [casesByDay, setCasesByDay] = useState([])
 
@@ -60,22 +59,33 @@ export function useCoronavirusHistoryData() {
     setLoadingCasesByDay(true)
     try {
       const response = await axios.get(
-        "https://pomber.github.io/covid19/timeseries.json"
+        selectedCity
+          ? "https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-cities-time.csv"
+          : "https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-states.csv"
       )
-      const brazilCasesByDay = response.data.Brazil
-      const nonRepeatedBrazilCasesByDay = getUnique(
-        brazilCasesByDay,
-        "confirmed"
-      )
-      const nonRepeatedBrazilCasesByDayWithFormattedDate = nonRepeatedBrazilCasesByDay.map(
-        casesByDay => ({
-          date: format(new Date(casesByDay.date), "dd/MM/yyyy"),
-          confirmed: casesByDay.confirmed,
-          deaths: casesByDay.deaths,
-          recovered: casesByDay.recovered
+      const statesCasesByDayCsv = response.data
+
+      csv({
+        output: "csv"
+      })
+        .fromString(statesCasesByDayCsv)
+        .then(function(stateCasesByDayJson) {
+          const brazilCasesByDay =
+            !selectedCity && !selectedState
+              ? stateCasesByDayJson.filter(item => item[2] === "TOTAL")
+              : selectedState && !selectedCity
+              ? stateCasesByDayJson.filter(item => item[2] === selectedState)
+              : stateCasesByDayJson.filter(item => item[3] === selectedCity)
+
+          const nonRepeatedBrazilCasesByDayWithFormattedDate = brazilCasesByDay.map(
+            casesByDay => ({
+              date: dayjs(casesByDay[0]).format("DD/MM/YYYY"),
+              confirmed: Number(casesByDay[5]),
+              newCases: Number(casesByDay[4])
+            })
+          )
+          setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
         })
-      )
-      setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
     } catch (error) {
       //console.log(error)
     }
@@ -84,7 +94,7 @@ export function useCoronavirusHistoryData() {
 
   useEffect(() => {
     getCasesByDay()
-  }, [])
+  }, [selectedState, selectedCity])
 
   return { casesByDay, loadingCasesByDay }
 }

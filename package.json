@@ -6,7 +6,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "csvtojson": "^2.0.10",
-    "date-fns": "^2.11.0",
+    "dayjs": "^1.8.23",
     "gatsby": "2.19.41",
     "gatsby-plugin-google-analytics": "^2.1.38",
     "gatsby-plugin-less": "^3.1.0",
