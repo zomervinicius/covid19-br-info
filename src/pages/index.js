@@ -131,7 +131,7 @@ export default function Index() {
         </LoadingChart>
       }
       <span className="text-gray-400 text-left mt-5">
-        Fontes: Ministério da saúde; Wordometer; Johns Hopkings
+        Fonte: Ministério da saúde
       </span>
     </Layout>
   )
