@@ -54,7 +54,7 @@ export default function Index() {
       {(selectedState || selectedCity) && (
         <div>
           <button
-            className="text-white mb-5"
+            className="text-white mb-5 text-lg"
             onClick={() => {
               setSelectedState("")
               setSelectedCity("")
@@ -65,6 +65,13 @@ export default function Index() {
           </button>
         </div>
       )}
+      <span className="text-xl text-gray-400 mb-5 text-center">
+        {!selectedCity && !selectedState
+          ? "Dados - Brasil"
+          : selectedState && !selectedCity
+          ? `Dados - ${selectedState}`
+          : `Dados - ${selectedCity}`}
+      </span>
 
       <div className="flex flex-wrap">
         <Card
