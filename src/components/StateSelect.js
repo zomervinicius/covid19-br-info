@@ -21,7 +21,7 @@ export function StateSelect({
       const stateData = brazilCoronavirusCases.find(
         item => item[1] === selectedState
       )
-      const infectedCases = stateData[3]
+      const infectedCases = stateData[2]
       const deceasedCases = stateData[5]
       setInfectedCases(infectedCases)
       setDeceasedCases(deceasedCases)
