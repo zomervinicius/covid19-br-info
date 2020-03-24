@@ -35,16 +35,18 @@ export function StateSelect({
       }
     }
   }, [selectedState])
+
   return (
     <React.Fragment>
       <Select
+        autoFocus
         isLoading={loadingCoronaVirusCases}
         isDisabled={loadingCoronaVirusCases}
         key={selectKey}
         options={options}
-        placeholder="Selecione um estado..."
+        placeholder="Selecione ou pesquise um estado..."
         onChange={value => setSelectedState(value.value)}
-        noOptionsMessage={() => "Não há dados"}
+        noOptionsMessage={() => "Não há opções"}
         defaultValue={selectedState}
         className="mb-5"
       />

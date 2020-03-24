@@ -8,12 +8,15 @@ export function CitySelect({
   selectedCity,
   setSelectedCity,
   loadingCoronaVirusCases,
-  selectKey,
-  setInfectedCases
+  setInfectedCases,
+  selectedState
 }) {
   const [options, setOptions] = useState([])
+  const [citySelectKey, setCitySelectKey] = useState(0)
 
   useEffect(() => {
+    setCitySelectKey(key => key + 1)
+    setSelectedCity("")
     const loadOptions = async () => {
       const response = await axios.get(
         "https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-cities.csv"
@@ -24,16 +27,18 @@ export function CitySelect({
       })
         .fromString(citiesCsv)
         .then(function(citiesJson) {
-          const allCities = citiesJson.map(city => ({
-            value: city[2],
-            label: city[2],
-            confirmedCases: city[3]
-          }))
+          const allCities = citiesJson
+            .filter(city => city[2].includes(`/${selectedState}`))
+            .map(city => ({
+              value: city[2],
+              label: city[2],
+              confirmedCases: city[3]
+            }))
           setOptions(allCities)
         })
     }
     loadOptions()
-  }, [])
+  }, [selectedState])
 
   const updateCityCases = select => {
     setSelectedCity(select.value)
@@ -42,13 +47,14 @@ export function CitySelect({
 
   return (
     <Select
+      autoFocus
       isLoading={loadingCoronaVirusCases}
       isDisabled={loadingCoronaVirusCases}
-      key={selectKey}
+      key={citySelectKey}
       options={options}
-      placeholder="Selecione uma cidade..."
+      placeholder="Selecione ou pesquise uma cidade..."
       onChange={select => updateCityCases(select)}
-      noOptionsMessage={() => "Não há dados"}
+      noOptionsMessage={() => "Essa cidade não possui nenhum caso confirmado"}
       defaultValue={selectedCity}
       className="mb-5"
     />
@@ -57,9 +63,8 @@ export function CitySelect({
 
 CitySelect.propTypes = {
   loadingCoronaVirusCases: PropTypes.bool,
-  selectKey: PropTypes.number,
   selectedCity: PropTypes.string,
+  selectedState: PropTypes.string,
   setInfectedCases: PropTypes.func,
-  setSelectKey: PropTypes.func,
   setSelectedCity: PropTypes.func
 }

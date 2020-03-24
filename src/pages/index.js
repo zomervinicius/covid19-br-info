@@ -17,49 +17,16 @@ export default function Index() {
   const [selectedCity, setSelectedCity] = useState("")
   const [infectedCases, setInfectedCases] = useState(0)
   const [deceasedCases, setDeceasedCases] = useState(0)
-  const [selectedOption, setSelectedOption] = useState("city")
   const {
     brazilCoronavirusCases,
     loadingCoronaVirusCases
   } = useCoronavirusData(setInfectedCases, setDeceasedCases, selectKey)
   const { casesByDay, loadingCasesByDay } = useCoronavirusHistoryData()
-  const handleOptionChange = e => {
-    setSelectedOption(e.target.value)
-    setInfectedCases(0)
-    setDeceasedCases(0)
-  }
+
   return (
     <Layout>
       <SEO keywords={["coronavirus", "brasil", "casos"]} title="Home" />
-      <form className="flex">
-        <div>
-          <label className="text-white text-base radio-container">
-            <input
-              type="radio"
-              value="state"
-              name="radio"
-              checked={selectedOption === "state"}
-              onChange={handleOptionChange}
-            />
-            <span className="checkmark"></span>
-            Pesquisar por estado
-          </label>
-        </div>
-        <div className="radio">
-          <label className="text-white text-base radio-container ml-5">
-            <input
-              type="radio"
-              name="radio"
-              value="city"
-              checked={selectedOption === "city"}
-              onChange={handleOptionChange}
-            />
-            <span className="checkmark"></span>
-            Pesquisar por cidade
-          </label>
-        </div>
-      </form>
-      {selectedOption === "state" && (
+      {
         <StateSelect
           {...{
             loadingCoronaVirusCases,
@@ -72,16 +39,15 @@ export default function Index() {
             setSelectKey
           }}
         />
-      )}
-      {selectedOption === "city" && (
+      }
+      {selectedState && (
         <CitySelect
           {...{
             selectedCity,
             setSelectedCity,
             loadingCoronaVirusCases,
-            selectKey,
-            setSelectKey,
-            setInfectedCases
+            setInfectedCases,
+            selectedState
           }}
         />
       )}
@@ -104,7 +70,7 @@ export default function Index() {
         <Card
           title="Casos confirmados"
           className={
-            selectedOption === "state" || !selectedCity
+            !selectedCity
               ? "max-w w-full md:w-1/2 mb-5 md:pr-5"
               : "max-w w-full  mb-5 md:pr-5"
           }
@@ -112,7 +78,7 @@ export default function Index() {
           description={infectedCases}
         />
 
-        {(selectedOption === "state" || !selectedCity) && (
+        {!selectedCity && (
           <Card
             className="max-w w-full md:w-1/2 mb-5"
             loadingCoronaVirusCases={loadingCoronaVirusCases}
