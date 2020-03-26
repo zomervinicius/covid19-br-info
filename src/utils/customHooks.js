@@ -80,8 +80,12 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
           const nonRepeatedBrazilCasesByDayWithFormattedDate = brazilCasesByDay.map(
             casesByDay => ({
               date: dayjs(casesByDay[0]).format("DD/MM/YYYY"),
-              confirmed: Number(casesByDay[5]),
-              newCases: Number(casesByDay[4])
+              confirmed: selectedCity
+                ? Number(casesByDay[6])
+                : Number(casesByDay[5]),
+              newCases: selectedCity
+                ? Number(casesByDay[5])
+                : Number(casesByDay[4])
             })
           )
           setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)

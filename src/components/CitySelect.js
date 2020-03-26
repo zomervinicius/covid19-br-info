@@ -32,7 +32,7 @@ export function CitySelect({
             .map(city => ({
               value: city[2],
               label: city[2],
-              confirmedCases: city[3]
+              confirmedCases: city[4]
             }))
           setOptions(allCities)
         })
