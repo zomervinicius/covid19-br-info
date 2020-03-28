@@ -82,10 +82,10 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
               date: dayjs(casesByDay[0]).format("DD/MM/YYYY"),
               confirmed: selectedCity
                 ? Number(casesByDay[6])
-                : Number(casesByDay[5]),
+                : Number(casesByDay[6]),
               newCases: selectedCity
                 ? Number(casesByDay[5])
-                : Number(casesByDay[4])
+                : Number(casesByDay[5])
             })
           )
           setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
