@@ -27,14 +27,26 @@ export function CitySelect({
       })
         .fromString(citiesCsv)
         .then(function(citiesJson) {
+          const splittedCsv = citiesCsv.split(",")
+          const cityIndex = splittedCsv.findIndex(item => item === "city")
+          const totalCasesIndex = splittedCsv.findIndex(item =>
+            item.includes("totalCases")
+          )
           const allCities = citiesJson
-            .filter(city => city[2].includes(`/${selectedState}`))
+            .filter(city => city[cityIndex].includes(`/${selectedState}`))
             .map(city => ({
-              value: city[2],
-              label: city[2],
-              confirmedCases: city[4]
+              value: city[cityIndex],
+              label: city[cityIndex],
+              confirmedCases: city[totalCasesIndex]
             }))
-          setOptions(allCities)
+
+          const sortHigherToLowerConfirmedCases = allCities.sort(function(
+            a,
+            b
+          ) {
+            return b.confirmedCases - a.confirmedCases
+          })
+          setOptions(sortHigherToLowerConfirmedCases)
         })
     }
     loadOptions()

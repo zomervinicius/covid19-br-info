@@ -17,7 +17,7 @@ export function StateSelect({
     .map(state => ({ value: state.abbr, label: state.name }))
 
   useEffect(() => {
-    if (selectedState) {
+    if (selectedState && brazilCoronavirusCases.length > 0) {
       const stateData = brazilCoronavirusCases.find(
         item => item[1] === selectedState
       )
