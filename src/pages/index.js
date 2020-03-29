@@ -125,8 +125,15 @@ export default function Index() {
             />
             <YAxis dataKey="confirmed" />
             <Tooltip label="date" />
-            <Line dataKey="confirmed" name="Confirmados" stroke="#e74c3c" />
+            <Line
+              dataKey="confirmed"
+              name="Casos confirmados"
+              stroke="#e74c3c"
+            />
             <Line dataKey="newCases" name="Novos casos" stroke="#f57c00" />
+            {!selectedCity && (
+              <Line dataKey="deaths" name="Mortes" stroke="blue" />
+            )}
           </LineChart>
         </LoadingChart>
       }

@@ -11,36 +11,40 @@ export function useCoronavirusData(
   const [loadingCoronaVirusCases, setLoadingCoronaVirusCases] = useState(true)
   const [brazilCoronavirusCases, setBrazilCoronavirusCases] = useState(true)
   const getMinistryOfHealthData = async () => {
+    setLoadingCoronaVirusCases(true)
     try {
       const response = await axios.get(
         "https://raw.githubusercontent.com/wcota/covid19br/master/cases-brazil-total.csv"
       )
       const brazilCasesCsv = response.data
+
       const brazilCasesJson = csv({
         output: "csv"
       })
         .fromString(brazilCasesCsv)
         .then(function(brazilCasesJson) {
-          return brazilCasesJson
+          const splittedCsv = brazilCasesCsv.split(",")
+          const csvTotalCasesIndex = splittedCsv.findIndex(
+            item => item === "totalCases"
+          )
+          const csvDeathsIndex = splittedCsv.findIndex(
+            item => item === "deaths"
+          )
+          setBrazilCoronavirusCases(brazilCasesJson)
+          setInfectedCases(brazilCasesJson[0][csvTotalCasesIndex] || 0)
+          setDeceasedCases(brazilCasesJson[0][csvDeathsIndex] || 0)
         })
       return brazilCasesJson
     } catch (error) {
       alert("Não foi possível obter os dados, tente novamente mais tarde")
+    } finally {
+      setLoadingCoronaVirusCases(false)
     }
     return []
   }
 
   const getCoronavirusCases = async () => {
-    setLoadingCoronaVirusCases(true)
-    const brazilConfirmedCasesRealTime = await getMinistryOfHealthData()
-    try {
-      setBrazilCoronavirusCases(brazilConfirmedCasesRealTime)
-      setInfectedCases(brazilConfirmedCasesRealTime[0][2] || 0)
-      setDeceasedCases(brazilConfirmedCasesRealTime[0][5] || 0)
-    } catch (error) {
-      alert("Não foi possível obter os dados, tente novamente mais tarde")
-    }
-    setLoadingCoronaVirusCases(false)
+    getMinistryOfHealthData()
   }
 
   useEffect(() => {
@@ -70,22 +74,41 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
       })
         .fromString(statesCasesByDayCsv)
         .then(function(stateCasesByDayJson) {
+          const splittedCsv = statesCasesByDayCsv.split(",")
+          //get cases by key
+          const csvCityOrState = selectedCity
+            ? splittedCsv.findIndex(item => item === "city")
+            : splittedCsv.findIndex(item => item === "state")
+
           const brazilCasesByDay =
             !selectedCity && !selectedState
-              ? stateCasesByDayJson.filter(item => item[2] === "TOTAL")
+              ? stateCasesByDayJson.filter(
+                  item => item[csvCityOrState] === "TOTAL"
+                )
               : selectedState && !selectedCity
-              ? stateCasesByDayJson.filter(item => item[2] === selectedState)
-              : stateCasesByDayJson.filter(item => item[3] === selectedCity)
+              ? stateCasesByDayJson.filter(
+                  item => item[csvCityOrState] === selectedState
+                )
+              : stateCasesByDayJson.filter(
+                  item => item[csvCityOrState] === selectedCity
+                )
+          const csvDateIndex = splittedCsv.findIndex(state => state === "date")
+          const csvConfirmedIndex = splittedCsv.findIndex(item =>
+            item.includes("totalCases")
+          )
+          const csvNewCasesIndex = splittedCsv.findIndex(
+            item => item === "newCases"
+          )
+          const csvDeathsIndex = splittedCsv.findIndex(
+            item => item === "deaths"
+          )
 
           const nonRepeatedBrazilCasesByDayWithFormattedDate = brazilCasesByDay.map(
             casesByDay => ({
-              date: dayjs(casesByDay[0]).format("DD/MM/YYYY"),
-              confirmed: selectedCity
-                ? Number(casesByDay[6])
-                : Number(casesByDay[6]),
-              newCases: selectedCity
-                ? Number(casesByDay[5])
-                : Number(casesByDay[5])
+              date: dayjs(casesByDay[csvDateIndex]).format("DD/MM/YYYY"),
+              confirmed: Number(casesByDay[csvConfirmedIndex]),
+              newCases: Number(casesByDay[csvNewCasesIndex]),
+              deaths: !selectedCity && Number(casesByDay[csvDeathsIndex])
             })
           )
           setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
