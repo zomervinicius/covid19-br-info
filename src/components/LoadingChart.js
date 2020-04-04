@@ -5,18 +5,18 @@ import { ResponsiveContainer } from "recharts"
 
 export function LoadingChart({ loading, chartData, children, chartTitle }) {
   return (
-    <div className={"max-w"}>
+    <div className={"max-w mt-5"}>
       <div
         className="border-r border-b border-l border-gray-900 lg:border-l-0  rounded-lg py-6 pr-6 md:px-6  flex flex-col text-center"
         style={{
-          backgroundColor: "#212024"
+          backgroundColor: "#212024",
         }}
       >
         <span className="text-gray-400 text-lg">{chartTitle}</span>
         {loading ? (
           <div
             style={{
-              height: isMobile ? 350 : 500
+              height: isMobile ? 350 : 500,
             }}
             className="flex"
           >
@@ -25,7 +25,7 @@ export function LoadingChart({ loading, chartData, children, chartTitle }) {
         ) : !loading && chartData.length === 0 ? (
           <div
             style={{
-              height: isMobile ? 350 : 500
+              height: isMobile ? 350 : 500,
             }}
             className="flex"
           >
@@ -47,5 +47,5 @@ LoadingChart.propTypes = {
   chartData: PropTypes.array,
   chartTitle: PropTypes.string,
   children: PropTypes.any,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
 }

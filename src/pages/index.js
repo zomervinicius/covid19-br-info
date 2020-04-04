@@ -8,7 +8,7 @@ import SEO from "../components/Seo"
 import { StateSelect } from "../components/StateSelect"
 import {
   useCoronavirusData,
-  useCoronavirusHistoryData
+  useCoronavirusHistoryData,
 } from "../utils/customHooks"
 
 export default function Index() {
@@ -19,13 +19,20 @@ export default function Index() {
   const [deceasedCases, setDeceasedCases] = useState(0)
   const {
     brazilCoronavirusCases,
-    loadingCoronaVirusCases
+    loadingCoronaVirusCases,
   } = useCoronavirusData(setInfectedCases, setDeceasedCases, selectKey)
   const { casesByDay, loadingCasesByDay } = useCoronavirusHistoryData(
     selectedState,
     selectedCity
   )
 
+  const deathsByDayGreaterThanZero = () =>
+    casesByDay.filter((caseByDay) => caseByDay.deaths > 0)
+
+  const memoizedDeathsByDayGreaterThanZero = React.useMemo(
+    () => deathsByDayGreaterThanZero(casesByDay),
+    [casesByDay]
+  )
   return (
     <Layout>
       <SEO keywords={["coronavirus", "brasil", "casos"]} title="Home" />
@@ -39,7 +46,7 @@ export default function Index() {
             setDeceasedCases,
             brazilCoronavirusCases,
             selectKey,
-            setSelectKey
+            setSelectKey,
           }}
         />
       }
@@ -50,7 +57,7 @@ export default function Index() {
             setSelectedCity,
             loadingCoronaVirusCases,
             setInfectedCases,
-            selectedState
+            selectedState,
           }}
         />
       )}
@@ -61,7 +68,7 @@ export default function Index() {
             onClick={() => {
               setSelectedState("")
               setSelectedCity("")
-              setSelectKey(key => key + 1)
+              setSelectKey((key) => key + 1)
             }}
           >
             Voltar para os dados do Brasil
@@ -81,8 +88,8 @@ export default function Index() {
           title="Casos confirmados"
           className={
             !selectedCity
-              ? "max-w w-full md:w-1/2 mb-5 md:pr-5"
-              : "max-w w-full  mb-5 md:pr-5"
+              ? "max-w w-full md:w-1/2 md:pr-5"
+              : "max-w w-full md:pr-5"
           }
           loadingCoronaVirusCases={loadingCoronaVirusCases}
           description={infectedCases}
@@ -90,26 +97,64 @@ export default function Index() {
 
         {!selectedCity && (
           <Card
-            className="max-w w-full md:w-1/2 mb-5"
+            className="max-w w-full md:w-1/2"
             loadingCoronaVirusCases={loadingCoronaVirusCases}
             title="Mortes"
             description={deceasedCases}
           />
         )}
       </div>
-      {
+      <LoadingChart
+        loading={loadingCasesByDay}
+        chartData={casesByDay}
+        chartTitle="Relatório diário casos"
+      >
+        <LineChart
+          data={casesByDay}
+          margin={{
+            left: 0,
+            right: 16,
+            top: 24,
+            bottom: 24,
+          }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="date"
+            textAnchor="middle"
+            tick={{
+              fontSize: 16,
+              angle: -25,
+              stroke: "white",
+            }}
+            tickMargin={20}
+          />
+          <YAxis dataKey="confirmed" />
+          <Tooltip label="date" />
+          <Line dataKey="confirmed" name="Casos confirmados" stroke="#e74c3c" />
+          <Line dataKey="newCases" name="Novos casos" stroke="#f57c00" />
+          <Line
+            dataKey={(key) =>
+              `${((key.newCases / key.confirmed) * 100).toFixed(2)}%`
+            }
+            name="Porcentagem crescimento dia"
+            stroke="blue"
+          />
+        </LineChart>
+      </LoadingChart>
+      {!selectedCity && (
         <LoadingChart
           loading={loadingCasesByDay}
           chartData={casesByDay}
-          chartTitle="Relatório diário"
+          chartTitle="Relatório diário mortes"
         >
           <LineChart
-            data={casesByDay}
+            data={memoizedDeathsByDayGreaterThanZero}
             margin={{
               left: 0,
               right: 16,
               top: 24,
-              bottom: 24
+              bottom: 24,
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
@@ -119,24 +164,24 @@ export default function Index() {
               tick={{
                 fontSize: 16,
                 angle: -25,
-                stroke: "white"
+                stroke: "white",
               }}
               tickMargin={20}
             />
-            <YAxis dataKey="confirmed" />
+            <YAxis dataKey="deaths" />
             <Tooltip label="date" />
+            <Line dataKey="deaths" name="Mortes confirmadas" stroke="#e74c3c" />
+            <Line dataKey="newDeaths" name="Novas mortes" stroke="#f57c00" />
             <Line
-              dataKey="confirmed"
-              name="Casos confirmados"
-              stroke="#e74c3c"
+              dataKey={(key) =>
+                `${((key.newDeaths / key.deaths) * 100).toFixed(2)}%`
+              }
+              name="Porcentagem crescimento dia"
+              stroke="blue"
             />
-            <Line dataKey="newCases" name="Novos casos" stroke="#f57c00" />
-            {!selectedCity && (
-              <Line dataKey="deaths" name="Mortes" stroke="blue" />
-            )}
           </LineChart>
         </LoadingChart>
-      }
+      )}
       <span className="text-gray-400 text-left mt-5">
         Fonte: Ministério da saúde
       </span>

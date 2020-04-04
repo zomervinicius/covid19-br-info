@@ -19,16 +19,16 @@ export function useCoronavirusData(
       const brazilCasesCsv = response.data
 
       const brazilCasesJson = csv({
-        output: "csv"
+        output: "csv",
       })
         .fromString(brazilCasesCsv)
         .then(function(brazilCasesJson) {
           const splittedCsv = brazilCasesCsv.split(",")
           const csvTotalCasesIndex = splittedCsv.findIndex(
-            item => item === "totalCases"
+            (item) => item === "totalCases"
           )
           const csvDeathsIndex = splittedCsv.findIndex(
-            item => item === "deaths"
+            (item) => item === "deaths"
           )
           setBrazilCoronavirusCases(brazilCasesJson)
           setInfectedCases(brazilCasesJson[0][csvTotalCasesIndex] || 0)
@@ -70,47 +70,57 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
       const statesCasesByDayCsv = response.data
 
       csv({
-        output: "csv"
+        output: "csv",
       })
         .fromString(statesCasesByDayCsv)
         .then(function(stateCasesByDayJson) {
           const splittedCsv = statesCasesByDayCsv.split(",")
           //get cases by key
           const csvCityOrState = selectedCity
-            ? splittedCsv.findIndex(item => item === "city")
-            : splittedCsv.findIndex(item => item === "state")
+            ? splittedCsv.findIndex((item) => item === "city")
+            : splittedCsv.findIndex((item) => item === "state")
 
           const brazilCasesByDay =
             !selectedCity && !selectedState
               ? stateCasesByDayJson.filter(
-                  item => item[csvCityOrState] === "TOTAL"
+                  (item) => item[csvCityOrState] === "TOTAL"
                 )
               : selectedState && !selectedCity
               ? stateCasesByDayJson.filter(
-                  item => item[csvCityOrState] === selectedState
+                  (item) => item[csvCityOrState] === selectedState
                 )
               : stateCasesByDayJson.filter(
-                  item => item[csvCityOrState] === selectedCity
+                  (item) => item[csvCityOrState] === selectedCity
                 )
-          const csvDateIndex = splittedCsv.findIndex(state => state === "date")
-          const csvConfirmedIndex = splittedCsv.findIndex(item =>
+          const csvDateIndex = splittedCsv.findIndex(
+            (state) => state === "date"
+          )
+          const csvConfirmedIndex = splittedCsv.findIndex((item) =>
             item.includes("totalCases")
           )
           const csvNewCasesIndex = splittedCsv.findIndex(
-            item => item === "newCases"
+            (item) => item === "newCases"
           )
           const csvDeathsIndex = splittedCsv.findIndex(
-            item => item === "deaths"
+            (item) => item === "deaths"
           )
 
-          const nonRepeatedBrazilCasesByDayWithFormattedDate = brazilCasesByDay.map(
-            casesByDay => ({
+          const nonRepeatedBrazilCasesByDayWithFormattedDate = []
+          for (let index = 0; index < brazilCasesByDay.length; index++) {
+            const casesByDay = brazilCasesByDay[index]
+            nonRepeatedBrazilCasesByDayWithFormattedDate.push({
               date: dayjs(casesByDay[csvDateIndex]).format("DD/MM/YYYY"),
               confirmed: Number(casesByDay[csvConfirmedIndex]),
               newCases: Number(casesByDay[csvNewCasesIndex]),
-              deaths: !selectedCity && Number(casesByDay[csvDeathsIndex])
+              deaths: !selectedCity && Number(casesByDay[csvDeathsIndex]),
+              newDeaths:
+                !selectedCity && index > 0
+                  ? Number(casesByDay[csvDeathsIndex]) -
+                    Number(brazilCasesByDay[index - 1][csvDeathsIndex])
+                  : 0,
             })
-          )
+          }
+          // console.log(nonRepeatedBrazilCasesByDayWithFormattedDate)
           setCasesByDay(nonRepeatedBrazilCasesByDayWithFormattedDate)
         })
     } catch (error) {
