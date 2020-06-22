@@ -106,8 +106,15 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
           )
 
           const nonRepeatedBrazilCasesByDayWithFormattedDate = []
-          for (let index = 0; index < brazilCasesByDay.length; index++) {
-            const casesByDay = brazilCasesByDay[index]
+          const lastSevenBrazilCasesByDay = brazilCasesByDay.slice(
+            Math.max(brazilCasesByDay.length - 7, 0)
+          )
+          for (
+            let index = 0;
+            index < lastSevenBrazilCasesByDay.length;
+            index++
+          ) {
+            const casesByDay = lastSevenBrazilCasesByDay[index]
             nonRepeatedBrazilCasesByDayWithFormattedDate.push({
               date: dayjs(casesByDay[csvDateIndex]).format("DD/MM/YYYY"),
               confirmed: Number(casesByDay[csvConfirmedIndex]),
@@ -116,7 +123,7 @@ export function useCoronavirusHistoryData(selectedState, selectedCity) {
               newDeaths:
                 !selectedCity && index > 0
                   ? Number(casesByDay[csvDeathsIndex]) -
-                    Number(brazilCasesByDay[index - 1][csvDeathsIndex])
+                    Number(lastSevenBrazilCasesByDay[index - 1][csvDeathsIndex])
                   : 0,
             })
           }

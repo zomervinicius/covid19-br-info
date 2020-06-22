@@ -107,7 +107,7 @@ export default function Index() {
       <LoadingChart
         loading={loadingCasesByDay}
         chartData={casesByDay}
-        chartTitle="Relatório diário casos"
+        chartTitle="Relatório semanal casos"
       >
         <LineChart
           data={casesByDay}
@@ -146,7 +146,7 @@ export default function Index() {
         <LoadingChart
           loading={loadingCasesByDay}
           chartData={casesByDay}
-          chartTitle="Relatório diário mortes"
+          chartTitle="Relatório semanal mortes"
         >
           <LineChart
             data={memoizedDeathsByDayGreaterThanZero}
