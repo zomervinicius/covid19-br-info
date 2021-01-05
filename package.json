@@ -4,7 +4,7 @@
   "version": "4.0.0",
   "author": "Vinícius Zomer <vinicius.zomer123@gmail.com>",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "csvtojson": "^2.0.10",
     "dayjs": "^1.8.23",
     "gatsby": "2.19.41",
